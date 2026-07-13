@@ -1,0 +1,40 @@
+# Caddyfile — CIVPRO Nexus preview origin. Installed to /etc/caddy/Caddyfile
+# by 02-provision.sh. Cloudflare Tunnel points at http://127.0.0.1:8080.
+#
+# Verified against official docs, accessed 2026-07-11:
+# - http:// site-address prefix disables automatic HTTPS per-site; bound to
+#   loopback only, so nothing but the tunnel can reach it:
+#   https://caddyserver.com/docs/automatic-https
+# - root + file_server static pattern: https://caddyserver.com/docs/caddyfile/patterns
+# - encode zstd gzip (documented ordering, Zstandard preferred):
+#   https://caddyserver.com/docs/caddyfile/directives/encode
+# - header directive (block form + matcher usage):
+#   https://caddyserver.com/docs/caddyfile/directives/header
+#   ⚠ the named-matcher Cache-Control lines below follow that doc's matcher
+#   syntax but were not captured verbatim in research-notes.md —
+#   02-provision.sh runs `caddy validate` before reloading.
+#
+# No HSTS here: TLS terminates at Cloudflare; this origin speaks plain HTTP.
+# Single index.html site — no try_files/rewrite needed.
+
+http://127.0.0.1:8080 {
+	root * /srv/civpro/dist
+
+	encode zstd gzip
+
+	header {
+		X-Content-Type-Options nosniff
+		X-Frame-Options DENY
+		Referrer-Policy no-referrer-when-downgrade
+	}
+
+	# Vite emits content-hashed filenames under /assets/ -> safe to cache forever.
+	@assets path /assets/*
+	header @assets Cache-Control "public, max-age=31536000, immutable"
+
+	# index.html must always revalidate so a deploy swap is picked up immediately.
+	@index path / /index.html
+	header @index Cache-Control "no-cache"
+
+	file_server
+}

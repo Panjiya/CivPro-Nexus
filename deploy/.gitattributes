@@ -1,0 +1,6 @@
+# Files that get copied to the Proxmox node / LXC must stay LF — bash and
+# Caddy choke on CRLF. This repo checkout has core.autocrlf=true and no root
+# .gitattributes, so without this pin a fresh Windows checkout would rewrite
+# these files to CRLF. (Added by adversarial review, 2026-07-11.)
+*.sh text eol=lf
+Caddyfile text eol=lf

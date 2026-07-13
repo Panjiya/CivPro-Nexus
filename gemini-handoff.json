@@ -1,0 +1,528 @@
+{
+  "meta": {
+    "name": "CIVPRO Nexus — public website prototype handoff",
+    "version": "1.0",
+    "generated": "2026-07-11",
+    "generated_from": "The shipped Vite+React+Tailwind prototype in 08-website/ (copy and demo data imported verbatim from src/content/).",
+    "how_to_use_this_file": "You are receiving a complete specification for a small public-facing website. Sections: project_summary tells you what the platform is; hard_rules are non-negotiable constraints on language, tone, and factual discipline — treat them as failing tests, not suggestions; design_system and site_structure describe the current implementation; copy and demo_data are the exact shipped words and data — reuse them verbatim unless asked to rewrite, and if you rewrite, re-apply hard_rules; demo_spec defines the interactive behavior; acceptance_checklist is how the output will be graded. Build with any stack unless instructed otherwise; the reference implementation is Vite + React + TypeScript + Tailwind v4, single page, no router, zero external network requests (fonts and assets bundled locally)."
+  },
+  "project_summary": {
+    "what_it_is": "CIVPRO Nexus — powered by Airwars.org — is a data platform for documenting civilian harm from military operations, so that incidents can be prevented, addressed, and answered for.",
+    "the_core_idea": "Underneath, there is one shared, neutral record of each incident. Every organization's own vocabulary (a military's, a human-rights group's, a UN body's, a community's) is mapped onto that shared record once. Readers then see the same record in their own words — nobody has to adopt anyone else's language. When a term translates imperfectly, or genuinely cannot be said in someone's vocabulary, the reader sees a plain flag saying so; the translation never silently changes meaning.",
+    "this_deliverable": "A simple, beautiful one-page website for someone who has NEVER heard of CIVPRO Nexus. Success: a stranger scrolls for 90 seconds, tries the demo, and can explain the platform to someone else. It conveys what USING the platform feels like — it is not documentation.",
+    "what_this_is_not": "Not the internal program package, not the technical MVP prototype, not a pitch deck. No login, no backend, no real database — one real incident record wired through an interactive demo."
+  },
+  "hard_rules": {
+    "plain_language_gate": {
+      "rule": "No unexplained term of art anywhere on the page. Every concept is expressed in everyday words first. A term of art may appear only immediately AFTER its plain-words explanation, in the pattern: plain words first, term second.",
+      "allowed_pattern_example": "a shared dictionary of concepts — engineers call it an ontology",
+      "banned_without_gloss": [
+        "ontology",
+        "dialect",
+        "canonical",
+        "fidelity",
+        "epistemic",
+        "normative",
+        "persona",
+        "doctrine",
+        "unitization",
+        "provenance",
+        "CHMR",
+        "SSSOM",
+        "SKOS",
+        "OWL",
+        "RDF",
+        "PROV",
+        "L1/L2/L3/L4",
+        "cpo:",
+        "competency question",
+        "requirement seed"
+      ]
+    },
+    "factual_discipline": {
+      "attribution": "Never state contested attribution as fact. The demo incident is ALWAYS \"attributed to US forces\" / \"reported as likely\" — never an unqualified \"US strike\". This applies to visible copy, meta tags, alt text, and code comments that could surface.",
+      "numbers": "Casualty figures keep their honesty in human words: ranges with sourcing, e.g. \"11–13 people reported killed, drawn from 42 public sources\". Never round a range to a single number.",
+      "no_invented_facts": "The demo uses one real incident (Airwars record USYEM250427a, 27 April 2025, Sanaa, Yemen). Do not invent additional incidents, casualties, quotes, or sources. Illustrative non-real content must be visibly labeled as illustrative.",
+      "barred_term": "The loaded military term for incidental civilian deaths (two words, initials c.d.) is deliberately never printed in the demo; where a vocabulary would use it, the flag note explains that this platform does not apply it to unadjudicated events. Keep it that way."
+    },
+    "tone": {
+      "register": "Calm, factual, humane. The subject is civilian harm — dignity and restraint throughout.",
+      "banned": [
+        "hype (revolutionary, game-changing, unprecedented)",
+        "advocacy framing or blame language",
+        "emotional rhetoric or graphic descriptions/imagery",
+        "marketing superlatives"
+      ]
+    },
+    "technical": {
+      "no_external_requests": "Zero network calls at runtime: fonts, styles, scripts, and images are bundled locally. No CDNs, no analytics, no tracking.",
+      "accessibility": [
+        "semantic landmarks; exactly one h1",
+        "full keyboard operability for the demo (role switching, flag notes, toggle); visible focus styles",
+        "prefers-reduced-motion honored: all reveals/crossfades collapse to instant",
+        "Arabic text rendered RTL-correctly inside <bdi> elements"
+      ],
+      "responsive": "Works and looks composed from 390px to 1440px."
+    }
+  },
+  "design_system": {
+    "typography": {
+      "family": "'Inter Variable', ui-sans-serif, system-ui, 'Segoe UI', Roboto, sans-serif",
+      "source": "@fontsource-variable/inter (bundled locally)",
+      "scale_rem": {
+        "micro": 0.6875,
+        "small": 0.875,
+        "body": 0.9375,
+        "lead": 1.125,
+        "h2": "1.875–2.25",
+        "h1": "2.5–3.5"
+      },
+      "micro_label_style": "uppercase, letter-spacing 0.14em, 55% ink opacity — used for kickers, field labels, role prompts"
+    },
+    "color": {
+      "ink": "#1a2332",
+      "panel": "#f7f7f5",
+      "accent": "#c0392b",
+      "white": "#ffffff",
+      "accent_usage_rule": "The red accent is structural (thin rules, small labels, active role pill, focus outline) — NEVER used as an alarm, severity, or \"violation\" color, and never on casualty numbers.",
+      "ink_opacity_steps": [
+        "/90 body",
+        "/80 lead",
+        "/75 quiet",
+        "/65 secondary",
+        "/55 labels",
+        "/15 borders",
+        "/10 hairlines"
+      ]
+    },
+    "spacing_and_rhythm": {
+      "grid": "8px rhythm; section padding py-20 md:py-28; content max-width 72rem (max-w-6xl); prose measure ~65ch (max-w-prose)",
+      "cards": "rounded-xl, 1px ink/15 border, shadow [0_1px_3px_rgba(26,35,50,0.06)]"
+    },
+    "motion": {
+      "scroll_reveal": "opacity 0→1 + translateY 16px→0, 0.7s ease, via IntersectionObserver (.reveal/.is-visible)",
+      "demo_crossfade": "fade-swap keyframes: opacity 0→1 + translateY 6px→0, 0.35s ease, on role change",
+      "reduced_motion": "both collapse to instant under prefers-reduced-motion"
+    },
+    "top_bar": "sticky, 56px (h-14), z-40, white/85 + backdrop-blur, hairline bottom border; wordmark left, jump-to-demo pill right",
+    "sticky_role_picker": "Inside the demo section the role picker is position:sticky at top-14 (below the top bar), z-30. At rest it renders full role cards with descriptions; once pinned it compacts to label-only pills plus the shared-record toggle in one row, gains a hairline bottom border and a soft shadow, over white/95 + backdrop-blur. Implemented with a 1px IntersectionObserver sentinel (rootMargin -57px top). Rationale: switching roles must never require scrolling back up — the record changes in place on screen."
+  },
+  "site_structure": [
+    {
+      "section": "top_bar",
+      "purpose": "wordmark + powered-by + jump to demo",
+      "copy_key": "copy.top_bar"
+    },
+    {
+      "section": "hero",
+      "purpose": "what this is, one breath; CTA scrolls to demo",
+      "copy_key": "copy.hero"
+    },
+    {
+      "section": "problem",
+      "purpose": "the same kind of event described four colliding ways; the cost of talking past each other",
+      "copy_key": "copy.problem"
+    },
+    {
+      "section": "demo",
+      "purpose": "THE product experience: read a real record as one of four roles; flags where translation bends or breaks; toggle to the shared record underneath",
+      "copy_key": "copy.demo + demo_data"
+    },
+    {
+      "section": "how_it_works",
+      "purpose": "four plain cards: shared dictionary → translator → evidence record → what happens next",
+      "copy_key": "copy.how"
+    },
+    {
+      "section": "status",
+      "purpose": "honest where-this-stands; built with Airwars",
+      "copy_key": "copy.status"
+    },
+    {
+      "section": "footer",
+      "purpose": "identity + date + the dignity line",
+      "copy_key": "copy.footer"
+    }
+  ],
+  "demo_spec": {
+    "initial_state": "No role selected: the card shows the shared (neutral) record with an inviting prompt to choose a role.",
+    "roles": [
+      {
+        "id": "military",
+        "maps_to": "military/doctrine vocabulary rendering"
+      },
+      {
+        "id": "researcher",
+        "maps_to": "casualty-recorder (Airwars) vocabulary rendering"
+      },
+      {
+        "id": "un",
+        "maps_to": "UN investigator vocabulary rendering"
+      },
+      {
+        "id": "community",
+        "maps_to": "plain everyday-language rendering"
+      }
+    ],
+    "interactions": [
+      "Selecting a role crossfades the record card into that role's vocabulary (labels AND values change).",
+      "Each field row carries a flag chip: exact / close / caveat / unsayable (plain-language labels in copy.demo.flagLegend). Clicking a chip opens an inline dismissible note explaining the translation state; Escape closes and refocuses the chip.",
+      "A \"show the shared record underneath\" toggle reveals the neutral version side-by-side on desktop, stacked on mobile.",
+      "The role picker pins below the top bar while the record is on screen (see design_system.sticky_role_picker).",
+      "At least one \"unsayable\" and one \"caveat\" flag are reachable across roles — they reflect real translation limits, do not remove them."
+    ],
+    "flag_semantics": {
+      "exact": "said exactly in your terms",
+      "close": "close translation — see note",
+      "caveat": "translated with a caveat",
+      "unsayable": "can't be said in these terms — the note explains what concept this vocabulary lacks"
+    }
+  },
+  "copy": {
+    "top_bar": {
+      "wordmark": "CIVPRO Nexus",
+      "poweredBy": "powered by Airwars.org",
+      "demoLink": "Try the demo"
+    },
+    "hero": {
+      "kicker": "CIVPRO Nexus — powered by Airwars.org",
+      "headline": "One record. Everyone’s words.",
+      "explainer": "A shared record of civilian harm that a military analyst, a human-rights researcher, a UN investigator, and an affected family each read in their own words — and where a translation falls short, it says so.",
+      "cta": "See it in action"
+    },
+    "problem": {
+      "title": "One night, four descriptions",
+      "setup": "When civilians are harmed in a military operation, several organizations write down what happened — a military review team, an independent research group, a UN office, and the affected community itself. Each uses the words its own work requires. The same event becomes an allegation in one system, a graded incident in another, a report that is supported but not yet formally verified in a third — and, at home, the night the house was hit. None of these descriptions is wrong. They just don’t line up.",
+      "voices": [
+        {
+          "speaker": "A military targeting cell",
+          "quote": "An allegation of civilian casualties, matched against our operations in the area. Status: open — our review has not concluded."
+        },
+        {
+          "speaker": "A casualty recorder",
+          "quote": "An incident of civilian harm, graded fair — meaning reported by two or more credible sources."
+        },
+        {
+          "speaker": "A UN report",
+          "quote": "Corroborated — supported by multiple sources — but not verified: verification has its own strict bar of three independent kinds of sources."
+        },
+        {
+          "speaker": "A family",
+          "quote": "The night our home was hit and our family was killed. We want it written down, and acknowledged by name."
+        }
+      ],
+      "markerLabel": "One event",
+      "closing": "Four honest descriptions of the same kind of night. When the words don’t line up, the records don’t line up: counts differ, databases can’t be compared, and a family asking what is known waits on translation."
+    },
+    "demo": {
+      "title": "Read it in your own words",
+      "intro": "This is a real incident record — one strike, documented from 42 public sources. Choose who you are, and read it in your own words.",
+      "rolePrompt": "Choose who you are",
+      "roles": [
+        {
+          "id": "military",
+          "label": "Military analyst",
+          "description": "Reviews outside reports of civilian harm and correlates them with operations."
+        },
+        {
+          "id": "researcher",
+          "label": "Human-rights researcher",
+          "description": "Documents civilian harm from public evidence and grades how well-reported each incident is."
+        },
+        {
+          "id": "un",
+          "label": "UN investigator",
+          "description": "Builds formal findings that must meet strict evidence standards."
+        },
+        {
+          "id": "community",
+          "label": "Community member",
+          "description": "Wants to know what is recorded about their family and their town, in plain words."
+        }
+      ],
+      "flagLegend": {
+        "exact": "said exactly in your terms",
+        "close": "close translation — see note",
+        "caveat": "translated with a caveat",
+        "unsayable": "can’t be said in these terms — here’s why"
+      },
+      "emptyState": {
+        "heading": "The shared record",
+        "prompt": "This is the neutral record every reading is drawn from. Choose a role above to read the same record in that person’s own words."
+      },
+      "labels": {
+        "shared": "The shared record underneath",
+        "noteClose": "Dismiss"
+      },
+      "toggle": {
+        "show": "Show the shared record underneath",
+        "hide": "Hide the shared record",
+        "blurb": "Every reading above is drawn from this one neutral record. Nothing is retyped by hand, and nothing silently changes meaning on the way through."
+      },
+      "caveat": {
+        "title": "What this record does — and doesn’t — claim",
+        "lines": [
+          "It records that an airstrike hit three to four adjacent homes in Thaqban, Yemen, on the evening of 27 April 2025.",
+          "It attributes the strike the way the evidence does: where sources named anyone, they named US forces. It is reported as likely — not officially confirmed, and not yet assessed by the US military.",
+          "Its numbers are ranges because sources genuinely differ: 11–13 people reported killed, drawn from 42 public sources — and the reasons the counts differ are recorded too.",
+          "It makes no legal finding. It records what is known, who said it, and how sure anyone can honestly be."
+        ]
+      }
+    },
+    "how": {
+      "title": "How it works",
+      "cards": [
+        {
+          "title": "A shared dictionary of concepts",
+          "body": "At the center sits one carefully defined set of concepts — engineers call it an ontology — that keeps separate the things people tend to blur: what happened, who reported it, and how sure anyone is.",
+          "example": "Example: ‘a family group’ is a concept of its own, because communities often know the family before they know each name."
+        },
+        {
+          "title": "A translator, built once per organization",
+          "body": "Each organization’s vocabulary is mapped onto the shared concepts one time, by people who know both sides — after that, any record can be read in that organization’s words automatically.",
+          "example": "Example: the researchers’ grade ‘fair’ — reported by two or more credible sources — is never quietly relabeled ‘credible’, a word that belongs to the military’s own review process."
+        },
+        {
+          "title": "One record, with receipts",
+          "body": "Each incident is one shared record holding its sources, locations, and names — and every fact carries a note of where it came from.",
+          "example": "Example: this incident rests on 42 public sources, from Arabic-language local news to international wire reports — many kept in their original Arabic."
+        },
+        {
+          "title": "From record to response",
+          "body": "A documented record is a beginning, not an end — it can be connected to acknowledgment, to answers, and to amends.",
+          "example": "Example: a family can see what the US military has said so far, and which response channels remain open, in their own language."
+        }
+      ]
+    },
+    "status": {
+      "title": "Where this stands",
+      "body": "This is an early prototype, built with Airwars. One real incident is wired end to end — the record you just read. The shared dictionary of concepts is being defined with practitioners now: the people who will actually read these records, in every vocabulary shown above.",
+      "next": "What comes next: more incidents, more vocabularies, and the same honesty about every translation."
+    },
+    "footer": "CIVPRO Nexus — powered by Airwars.org · early prototype, 2026-07-11 · this demo uses one real incident record, shown with the care its subject deserves."
+  },
+  "demo_data": {
+    "incident": {
+      "id": "USYEM250427a",
+      "date": "27 April 2025",
+      "place": {
+        "original": "منطقة ثقبان بمديرية بني الحارث",
+        "transliteration": "Thaqban area, Bani al-Harith District, Sanaa, Yemen"
+      },
+      "headlineFacts": [
+        "An airstrike hit three to four adjacent family homes in the evening.",
+        "11–13 people reported killed — among them eight children and two women — and four more injured, drawn from 42 public sources.",
+        "Attributed to US forces — reported as likely, not officially confirmed."
+      ]
+    },
+    "shared_record": [
+      {
+        "label": "What happened",
+        "value": "An airstrike hit three to four adjacent homes on the evening of 27 April 2025 — around 8:00 pm local time, recorded as approximate."
+      },
+      {
+        "label": "Where",
+        "value": "منطقة ثقبان بمديرية بني الحارث — Thaqban area, Bani al-Harith District, Sanaa, Yemen. Location proven with visual evidence; four map points across the struck homes."
+      },
+      {
+        "label": "Who was reported harmed",
+        "value": "11–13 people reported killed (8 children, 2 women, 1 man) and 4 injured (3 children, 1 man), in three family groups: Masoud — 8 killed; Al-Jamouli — 2 killed; Obeid — 1 killed, 2 injured. The counts differ for stated reasons: one count includes an unborn child, and first-night tolls rose as rescuers reached people buried in the rubble."
+      },
+      {
+        "label": "Who did it",
+        "value": "Attributed to US forces — named by local sources only; reported as a likely strike, not officially confirmed."
+      },
+      {
+        "label": "How sure is this",
+        "value": "Reported by two or more credible sources — 42 public sources in all, many in their original Arabic — with likely or confirmed military action nearby that day."
+      },
+      {
+        "label": "What is the status",
+        "value": "The US military says it is aware of the claims and is conducting its own review; it has not published an assessment of this incident. The record stays open, and every version is dated."
+      }
+    ],
+    "role_renderings": [
+      {
+        "id": "military",
+        "fields": [
+          {
+            "label": "Incident report",
+            "value": "External allegation of civilian casualties — evening of 27 April 2025, vicinity of Sanaa. Cross-referenced to archive code USYEM250427a.",
+            "flag": "close",
+            "note": "Outside reports are held as allegations and linked by reference code — military records and this archive point to each other; they are never merged."
+          },
+          {
+            "label": "Reported involvement",
+            "value": "US involvement reasonably suspected — no finding of responsibility rendered.",
+            "flag": "close",
+            "note": "'Reasonably suspected' is this vocabulary's careful phrasing. Words that would assign blame or legal status are withheld, because no such finding exists in the record."
+          },
+          {
+            "label": "Reported casualties",
+            "value": "Killed: lower bound 11, upper bound 13. Injured: 4. Killed and injured counted separately.",
+            "flag": "close",
+            "note": "This vocabulary reports casualties as an upper and lower bound. The reasons the bounds differ — one count includes an unborn child; early tolls rose overnight — stay attached in the shared record."
+          },
+          {
+            "label": "Assessment status",
+            "value": "Open — no honest value exists yet on the credible / not-credible scale.",
+            "flag": "unsayable",
+            "note": "On this scale, 'credible' and 'not credible' are conclusions of the military's own review — which has not concluded for this incident. The researchers' grade answers a different question, so it cannot honestly be restated here. The only truthful value is 'open'."
+          },
+          {
+            "label": "Damage",
+            "value": "Four residential buildings destroyed — recorded as damage to civilian objects.",
+            "flag": "caveat",
+            "note": "Military manuals have a familiar two-word term for unintended damage — but its definition builds in findings that the target was lawful and the harm unintended. No one has made those findings here, so this platform will not apply the term to an event that has not been formally assessed."
+          },
+          {
+            "label": "Families affected",
+            "value": "Cannot be said in these terms.",
+            "flag": "unsayable",
+            "note": "This vocabulary has no concept of a family or household group. 'Three families — one of which lost eight members' cannot be expressed here; the shared record keeps it, and shows you this note instead of quietly dropping it."
+          }
+        ]
+      },
+      {
+        "id": "researcher",
+        "fields": [
+          {
+            "label": "Incident",
+            "value": "Airstrike, 27 April 2025, around 8:00 pm local time (time recorded as approximate) — strike status: likely strike.",
+            "flag": "exact",
+            "note": "This recorder's own typed way of saying 'around 8pm' — the shared record's concept of imprecise time was built from it."
+          },
+          {
+            "label": "Location",
+            "value": "منطقة ثقبان بمديرية بني الحارث — Thaqban area, Bani al-Harith District, Sanaa. Precision: exact location, proven with visual evidence.",
+            "flag": "caveat",
+            "note": "The proven location covers four map points across several struck homes — more shape than this vocabulary's single map-pin field can hold. The full footprint stays in the shared record."
+          },
+          {
+            "label": "Civilians reported harmed",
+            "value": "11–13 civilians killed (8 children, 2 women, 1 man); 4 injured (3 children, 1 man).",
+            "flag": "caveat",
+            "note": "The range itself is exact, but this vocabulary has no field for why the counts differ — one count includes an unborn child; first-night tolls rose as rescuers reached people buried in the rubble. Those reasons stay attached in the shared record."
+          },
+          {
+            "label": "Harm grade",
+            "value": "Fair — 'reported by two or more credible sources, with likely or confirmed near actions by a belligerent.'",
+            "flag": "exact",
+            "note": "The recorder's own grade, quoted from its published definitions ('belligerent' simply means a force fighting in the conflict)."
+          },
+          {
+            "label": "Attribution",
+            "value": "U.S. Forces — suspected: named by local sources only. Their position: not yet assessed.",
+            "flag": "exact",
+            "note": "Three separate judgments — how well reported, whether a strike happened, who did it — kept as three separate answers, never squeezed into one score."
+          },
+          {
+            "label": "Family groups",
+            "value": "Masoud family — 8 killed · Al-Jamouli family — 2 killed · Obeid family — 1 killed, 2 injured.",
+            "flag": "exact",
+            "note": "The only vocabulary in this demo that can group victims by family — the shared concept of a family group was built from it."
+          }
+        ]
+      },
+      {
+        "id": "un",
+        "fields": [
+          {
+            "label": "Incident entry",
+            "value": "Incident entry, ref USYEM250427a — 27 April 2025.",
+            "flag": "exact",
+            "note": "Date and incident entry are part of the UN minimum-data list — they carry over without loss."
+          },
+          {
+            "label": "Location",
+            "value": "Thaqban area, Bani al-Harith District, Sanaa, Yemen — with the method used to confirm the location attached.",
+            "flag": "exact",
+            "note": "How a location was established travels with the location itself, as this practice requires."
+          },
+          {
+            "label": "Casualties",
+            "value": "11–13 killed, 4 injured — broken down by sex and age, with the reasons the counts differ stated in full.",
+            "flag": "close",
+            "note": "A close rendering: this practice requires working assumptions to be declared, so the reasons behind the range — one count includes an unborn child; early tolls rose overnight — are spelled out rather than hidden."
+          },
+          {
+            "label": "Alleged perpetrator",
+            "value": "US forces — alleged.",
+            "flag": "close",
+            "note": "'Alleged' keeps this a claim rather than a finding. The record says who was named; it does not judge."
+          },
+          {
+            "label": "Verification status",
+            "value": "Corroborated — supported by multiple sources — under the recorder's stated standard. Not 'verified'.",
+            "flag": "unsayable",
+            "note": "In UN practice, 'verified' requires at least three independent kinds of sources — for example a victim, a medical worker, and an authority. That test has not been applied here, so the word is withheld rather than borrowed."
+          },
+          {
+            "label": "Damage to homes",
+            "value": "Cannot be carried in these terms.",
+            "flag": "unsayable",
+            "note": "This recording practice is generally limited to deaths and injuries. The destruction of four family homes cannot be said here — it stays in the shared record, and you see this note instead of silence."
+          }
+        ]
+      },
+      {
+        "id": "community",
+        "fields": [
+          {
+            "label": "What happened",
+            "value": "In the evening of 27 April 2025, an airstrike hit three or four houses standing next to each other in Thaqban, just north of Sanaa.",
+            "flag": "exact",
+            "note": "Said plainly, with nothing added and nothing hidden."
+          },
+          {
+            "label": "Who was harmed",
+            "value": "Between 11 and 13 people were reported killed — eight of them children, two of them women — and four more were injured. The Masoud family lost eight people. The Al-Jamouli family lost two. The Obeid family lost one son, and two of its children were hurt.",
+            "flag": "exact",
+            "note": "Families are named as families — acknowledgment should not have to wait for a complete list of individual names."
+          },
+          {
+            "label": "Who did it",
+            "value": "Where reports named anyone, they all named the American military. The strike is reported as likely — the American military has not confirmed it.",
+            "flag": "close",
+            "note": "Plain words for a careful claim: attributed to US forces by local sources, reported as likely — not officially confirmed."
+          },
+          {
+            "label": "How sure is this",
+            "value": "Independent researchers found this reported by two or more credible sources, with likely or confirmed US military action nearby that day.",
+            "flag": "close",
+            "note": "The researchers' grade, restated in everyday words — the meaning kept, the label left behind."
+          },
+          {
+            "label": "What have they said",
+            "value": "The American military says it is aware of the claims that civilians were killed and is looking into them. It has not yet given an answer about this strike.",
+            "flag": "exact",
+            "note": "Their words, as reported: 'aware of the claims of civilian casualties', with their own review under way."
+          },
+          {
+            "label": "What can still happen",
+            "value": "US policy allows acknowledgment, condolences, and help — and a payment is possible without waiting for the review to finish.",
+            "flag": "caveat",
+            "note": "The caveat: by US law, such a payment 'may not be construed or considered as an admission' of any legal obligation. Plainly — money may come without an admission of fault. This record keeps those two things separate, offering neither false hope nor false comfort."
+          }
+        ]
+      }
+    ]
+  },
+  "acceptance_checklist": [
+    "Stranger test: every visible string readable with zero domain knowledge; every banned term glossed plain-words-first at point of use.",
+    "Attribution discipline everywhere (visible copy, <title>, meta description): \"attributed to US forces\", \"reported as likely\"; no unqualified claim.",
+    "The barred two-word term appears nowhere in visible copy.",
+    "Role switching visibly changes labels and values across all four roles; flag notes open/dismiss by mouse and keyboard; shared-record toggle works.",
+    "Role picker pins below the top bar when scrolled and compacts; switching roles while pinned updates the card without scrolling.",
+    "At least one unsayable and one caveat flag reachable; their notes explain why in plain words.",
+    "Zero console errors; zero external network requests.",
+    "Keyboard-only pass succeeds; focus visible; one h1; landmarks present; Arabic renders RTL inside <bdi>.",
+    "Composed at 390px and 1440px; wide content never causes horizontal page scroll.",
+    "Tone: calm, humane, no hype, no advocacy, no graphic content."
+  ],
+  "out_of_scope": [
+    "No additional incidents or invented data; no login/auth; no backend; no analytics; no cookie banners.",
+    "No legality conclusions or blame assignments anywhere.",
+    "Do not add imagery of casualties or destruction; abstract/inline SVG only."
+  ]
+}
